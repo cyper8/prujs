@@ -8,6 +8,9 @@
 			font-family: Pru;
 			src: url('pru.ttf');
 		}
+		*, *:after, *:before {
+			box-sizing: border-box;
+		}
 		:root {
 			font-size: 13pt;
 			font-family: sans-serif;
@@ -97,7 +100,7 @@
 			height: auto;
 			line-height: 0.5em;
 			text-align: center;
-			padding: 0px;
+			padding: 5mm 0px 3mm;
 			border: solid 0.5px black;
 		}
 		.shield#pad{
@@ -109,12 +112,6 @@
 			flex: 0.5em 0 1;
 			margin: 0.4em 1em;
 			white-space: nowrap;
-		}
-		.shield p:first-child{
-			margin-top: 1em;
-		}
-		.shield p:last-child{
-			margin-bottom: 0.5em;
 		}
 		.shield p:empty, .shield p[hide="true"] {
 			display: none;
@@ -458,8 +455,8 @@
 			if (child.id == "pad") out.removeChild(child);
 			else child.style.height = child.style.flexBasis?child.style.flexBasis="auto":child.style.webkitFlexBasis="auto";
 		});
-		var vsize = (out.clientHeight/Math.floor(out.clientHeight/out.children[0].clientHeight))-2;
-		var hsize = (out.clientWidth/Math.floor(out.clientWidth/out.children[0].clientWidth))-2;
+		var vsize = (out.clientHeight/Math.floor(out.clientHeight/out.children[0].clientHeight));
+		var hsize = (out.clientWidth/Math.floor(out.clientWidth/out.children[0].clientWidth));
 		for (var i=0;i<out.children.length;i++){
 			out.children[i].style.height = vsize+"px";
 			out.children[i].style.flexBasis?out.children[i].style.flexBasis=hsize*0.9+"px":out.children[i].style.webkitFlexBasis=hsize*0.9+"px";

@@ -10,6 +10,7 @@
 		}
 		:root {
 			font-size: 13pt;
+			font-family: sans-serif;
 		}
 		body {
 			margin: 0px;
@@ -22,7 +23,7 @@
 			display: flex; display: -webkit-flex;
 			-webkit-flex-direction: row; -ms-flex-direction: row; flex-direction: row;
 			flex-wrap: wrap;
-			padding: 0px 0.6em 0.6em;
+			padding: 0px;
 			min-height: 5em;
 			max-height: 10em;
 			-webkit-align-items: baseline; align-items: baseline;
@@ -41,7 +42,7 @@
 			opacity: 0;
 			transition: opacity linear 0.2s;
 		}
-		#formswitch:checked + form label[for="formswitch"]:before {
+		#formswitch:checked + form label[for="formswitch"]:after {
 			transform: rotateZ(45deg);
 			transition: transform linear 0.2s;
 		}
@@ -49,22 +50,16 @@
 			-webkit-flex: 100% 1 0;
 			-ms-flex: 100% 1 0;
 			flex: 100% 1 0;
-			padding: 0px;
+			padding: 0em;
+			margin:0px;
 			line-height: 1em;
 			display: block;
-			text-align: center;
-			background-color: #039be5;
-			transition: background-color linear 0.1s;
 		}
-		form label[for="formswitch"]:before {
+		form label[for="formswitch"]:after {
 			content: "+";
 			font-weight: bold;
 			display: inline-block;
 			transition: transform linear 0.2s;
-		}
-		form label[for="formswitch"]:hover {
-			background-color: #42a5f5;
-			transition: background-color linear 0.1s;
 		}
 		form *{
 			display: inline-block;
@@ -89,7 +84,7 @@
 			background-color: #bdbdbd;
 		}
 		.shield {
-			display: flex; display: -webkit-flex; 
+			display: flex; display: -webkit-flex;
 			-webkit-flex-direction: column; -ms-flex-direction: column; flex-direction: column;
 			flex-wrap: nowrap;
 			-webkit-align-items: stretch; align-items: stretch;
@@ -128,26 +123,31 @@
 			position: relative;
 			text-decoration: underline;
 			text-decoration-style: dotted;
-			text-decoration-color: green
+			text-decoration-color: green;
+			cursor: pointer
 		}
-		.rotatable:hover:after, .warning:hover:after {
+		.info {
+			position: relative;
+		}
+		.rotatable:hover:after, .warning:hover:after, .info:hover:after {
 			display: block;
 			position: absolute;
+			content: attr(message);
 			background-color: ivory;
+			color: black;
 			padding: 0.3em;
 			box-shadow: 0px 2px 4px rgba(56,56,56,0.6);
 			width: auto;
-			top: -1em;
+			max-width: 20em;
+			bottom: 2em;
 			left: 1em;
 			font-family: sans-serif;
 			font-size: 8pt;
+			line-height: 1em;
 		}
 		.warning {
 			position: relative;
 			border: dotted 1px red;
-		}
-		.warning:hover:after {
-			content: "Не вдалося визначити рід: потрібно вказати вручну";
 		}
 		.rotatable:hover:after {
 			content: "Для перемикання значень - клацніть";
@@ -156,13 +156,49 @@
 			width: 297mm;
 			height: 210mm;
 			overflow:visible;
-			display: flex; display: -webkit-flex; 
+			display: flex; display: -webkit-flex;
 			-webkit-flex-direction: row; -ms-flex-direction: row; flex-direction: row;
 			flex-wrap: wrap;
 		}
+		.button {
+			display: inline-block;
+			position: relative;
+			text-align: center;
+			background-color: #039be5;
+			line-height: 2em;
+			color: white;
+			padding: 0.1em 0.5em;
+			margin: 0.5em;
+			cursor: pointer;
+			transition: background-color linear 0.1s;
+		}
+		.button:hover{
+			background-color: #42a5f5;
+			transition: background-color linear 0.1s;
+		}
+		.button:active {
+			background-color: #039be5;
+		}
+		.hoist {
+			position: fixed;
+			opacity: 0.5;
+			box-shadow: 0px 2px 4px rgba(56,56,56,0.5);
+		}
+		.hoist:hover {
+			opacity: 1;
+		}
+		#print.button{
+			bottom: 1em;
+			right: 1em;
+		}
+		#print.button:after{
+			right:1em;
+			left: unset;
+			bottom: 3em;
+		}
 	</style>
 	<style media="print" type="text/css">
-		form, #formswitch {display:none}
+		form, #formswitch, .button {display:none}
 		@page, body {
 			size: A4 landscape;
 			margin: 0px;
@@ -177,23 +213,24 @@
 <body>
 	<input type="checkbox" id="formswitch">
 	<form id="shields_form">
-		<label for="formswitch"></label>
+		<label for="formswitch" class="button">Налаштувати ... </label>
 		<label id="dim">Розмір:<input type="range" min="0.5" max="2" step="0.1" name="x" value=1 onchange="changeX(this.value)">
 		</label>
-	
-		<label for="firstline"><input type="checkbox" id="firstline" name="fline" checked=true onchange='line0(this.checked)'>Зошит</label>
-	
-		<label for="secondline">
-			<input type="checkbox" name="sline" checked=true onchange="setClassname(this.checked)">
+
+		<label for="firstline" class="info" message="Ввімкнути/вимкнути рядок"><input type="checkbox" id="firstline" name="fline" checked=true onchange='line0(this.checked)'>Зошит</label>
+
+		<label for="secondline" >
+			<input type="checkbox" class="info" message="Ввімкнути/вимкнути рядок" name="sline" checked=true onchange="setClassname(this.checked)">
 			<input type="text" name="classname" placeholder="для робіт з математики" onkeyup='fireChange(event)' onchange="setClassname(this.value)">
 		</label>
-	
+
 		<label>учня|учениці <input type="text" name="grade" placeholder="1 - В" onkeyup="fireChange(event)" onchange="setGrade(this.value)"> класу</label>
 		<label>Скандинавської гімназії</label>
 		<label>м. Києва</label>
 		<label>Прізвища та імена дітей (в родовому відмінку, в стовпчик або через кому): <textarea name=kids onkeyup="fireChange(event)" onchange="setKids(this.value)"></textarea></label>
 	</form>
 	<div class="pages" id="output">	</div>
+	<div class="button hoist info" message="Для правильного друку в налаштуваннях друку слід встановити орієнтацію сторінки - альбомну(landscape), і нульові поля" id="print" onclick="window.print()">Друк</div>
 </body>
 <script type="text/javascript">
 
@@ -266,7 +303,7 @@
 			self.set(defaultValue);
 			return self;
 		}
-		
+
 		function variable(defaultValue,id){
 			var self = document.createElement("span");
 			self.id = id;
@@ -292,7 +329,7 @@
 			return self;
 		}
 
-		
+
 		var self = cell();
 		self.appendChild(line(ToPru("Зошит"),"line0")).toggle(form("firstline"));
 		self.appendChild(line(ToPru(form("classname")),"line1"));
@@ -303,8 +340,8 @@
 		self.appendChild(line(ToPru(name)));
 		var male = checkMale(name);
 		if (male === undefined) {
+			self.setAttribute("message","Не вдалося визначити рід: потрібно вказати вручну");
 			self.classList.add("warning");
-			gender.rotate((Math.random()<0.5));
 		}
 		else gender.rotate((male)?0:1);
 		return self;
@@ -363,7 +400,7 @@
 			all[i].set(ToPru(v));
 		}
 	}
-	
+
 	function setKids(lines){
 		render(tolist(lines));
 	}
@@ -386,13 +423,17 @@
 				if (m>male_count) male_count = m;
 				if (f>female_count) female_count = f;
 			});
-			
+
 			if (male_count > female_count) return true;
 			if (female_count > male_count) return false;
+			return undefined;
 		}
-		return undefined;
+		else {
+			if (Math.random()>0.5) return true;
+			else return false;
+		}
 	}
-	
+
 	function render(kids){
 		var c;
 		out.innerHTML = "";
@@ -402,7 +443,7 @@
 		}
 		setTimeout(resize,500);
 	}
-	
+
 	function complement(){
 		var first = out.children[0]
 		, last = out.children[out.children.length-1]

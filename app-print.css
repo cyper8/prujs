@@ -1,0 +1,9 @@
+form, #formswitch, .button {display:none}
+@page, body {
+	size: A4 landscape;
+	margin: 0px;
+	padding: 0px;
+}
+.rotatable, .warning {
+	text-decoration: none;
+}

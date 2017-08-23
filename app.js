@@ -1,4 +1,5 @@
 /* global HTMLElement, Node, ToPru */
+var App;
 
 function main(){
 	var out = document.getElementById("output");
@@ -233,6 +234,15 @@ function main(){
 		complement();
 	}
 	
+  App = {
+    fireChange: fireChange,
+    changeX: changeX,
+    line0: line0,
+    setClassname: setClassname,
+    setGrade: setGrade,
+    setKids: setKids
+  }
+
 	render(form("kids"));
 }
 

@@ -12,20 +12,20 @@
 	<input type="checkbox" id="formswitch">
 	<form id="shields_form">
 		<label for="formswitch" class="button">Налаштувати ... </label>
-		<label id="dim">Розмір:<input type="range" min="0.5" max="2" step="0.1" name="x" value=1 onchange="changeX(this.value)">
+		<label id="dim">Розмір:<input type="range" min="0.5" max="2" step="0.1" name="x" value=1 onchange="App.changeX(this.value)">
 		</label>
 
-		<label for="firstline" class="info" message="Ввімкнути/вимкнути рядок"><input type="checkbox" id="firstline" name="fline" checked=true onchange='line0(this.checked)'>Зошит</label>
+		<label for="firstline" class="info" message="Ввімкнути/вимкнути рядок"><input type="checkbox" id="firstline" name="fline" checked=true onchange='App.line0(this.checked)'>Зошит</label>
 
 		<label for="secondline" >
-			<input type="checkbox" class="info" message="Ввімкнути/вимкнути рядок" name="sline" checked=true onchange="setClassname(this.checked)">
-			<input type="text" name="classname" placeholder="для робіт з математики" onkeyup='fireChange(event)' onchange="setClassname(this.value)">
+			<input type="checkbox" class="info" message="Ввімкнути/вимкнути рядок" name="sline" checked=true onchange="App.setClassname(this.checked)">
+			<input type="text" name="classname" placeholder="для робіт з математики" onkeyup='App.fireChange(event)' onchange="App.setClassname(this.value)">
 		</label>
 
-		<label>учня|учениці <input type="text" name="grade" placeholder="1 - В" onkeyup="fireChange(event)" onchange="setGrade(this.value)"> класу</label>
+		<label>учня|учениці <input type="text" name="grade" placeholder="1 - В" onkeyup="App.fireChange(event)" onchange="App.setGrade(this.value)"> класу</label>
 		<label>Скандинавської гімназії</label>
 		<label>м. Києва</label>
-		<label>Прізвища та імена дітей (в родовому відмінку, в стовпчик або через кому): <textarea name=kids onkeyup="fireChange(event)" onchange="setKids(this.value)"></textarea></label>
+		<label>Прізвища та імена дітей (в родовому відмінку, в стовпчик або через кому): <textarea name=kids onkeyup="App.fireChange(event)" onchange="App.setKids(this.value)"></textarea></label>
 	</form>
 	<div class="pages" id="output">	</div>
 	<div class="button hoist info" message="Для правильного друку в налаштуваннях друку слід встановити орієнтацію сторінки - альбомну(landscape), і нульові поля" id="print" onclick="window.print()">Друк</div>

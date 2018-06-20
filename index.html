@@ -32,7 +32,8 @@
 		<label>учня|учениці <input type="text" name="grade" placeholder="1 - Д" oninput="App.fireChange(this)" onchange="App.setGrade((this.value && this.value!='')?this.value:this.placeholder)"> класу</label>
 		<label>Скандинавської гімназії</label>
 		<label>м. Києва</label>
-		<label>Прізвища та імена дітей (в родовому відмінку, в стовпчик або через кому): <textarea name=kids oninput="App.fireChange(this)" onchange="App.setKids(this.value)"></textarea></label>
+		<label>Прізвища та імена дітей (в родовому відмінку, в стовпчик або через кому): <textarea name="kids" oninput="App.fireChange(this)" onchange="App.setKids(this.value)"></textarea></label>
+		<label onclick="App.config.dump()">Зберегти налаштування у файл</label>
 	</form>
 	<div class="pages" id="output">	</div>
 	<div class="button hoist info" message="Для правильного друку в налаштуваннях друку слід встановити орієнтацію сторінки - альбомну(landscape), і нульові поля" id="print" onclick="window.print()">Друк</div>

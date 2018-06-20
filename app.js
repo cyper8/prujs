@@ -33,6 +33,36 @@ function main(){
 		return form[field].checked || form[field].value || form[field].placeholder
 	}
 
+	var config = {
+		getSettings(){
+			return {
+				scale: form("x"),
+				firstline: {
+					enabled: form("fline"),
+					text: form("firstline_text")
+				},
+				classname: {
+					enabled: form("sline"),
+					text: form("classname")
+				},
+				classname2: form("classname2"),
+				grade: form("grade"),
+				children: form("kids")
+			}
+		},
+		dump(){
+			var link = document.getElementById("config_link") || document.createElement("a");
+			var cfg = this.getSettings();
+			link.id = "config_link";
+			link.download = "Генератор бірок.json";
+			if (link.href.length) URL.revokeObjectURL(link.href);
+			link.href = URL.createObjectURL(new File([JSON.stringify(cfg)],"Генератор бірок",{type: "text/json"}));
+			document.body.appendChild(link);
+			link.style.visibility = "hidden";
+			link.click();
+		}
+	}
+
 	var dpmm = out.clientWidth/297;
 	var page_expected_height = 210*dpmm;
 
@@ -263,7 +293,8 @@ function main(){
     setClassname: setClassname,
     setclsname2: setclsname2,
     setGrade: setGrade,
-    setKids: setKids
+    setKids: setKids,
+		config: config
   }
 
 	render(form("kids"));

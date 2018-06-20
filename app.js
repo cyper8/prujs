@@ -118,7 +118,7 @@ function main(){
 		var self = cell();
 		self.appendChild(line(ToPru(form("firstline_text")),"line0")).toggle(form("fline"));
 		self.appendChild(line(ToPru(form("classname")),"line1")).toggle(form("sline"));
-    self.appendChild(line(ToPru(form("classname2")),"line1a")).toggle(form("thline"));
+    self.appendChild(line(ToPru(form("classname2")),"line1a"));
 		var gender = rotatable([ToPru("учня"),ToPru("учениці")],"gender");
 		self.appendChild(line([gender,variable(ToPru(form("grade")),"grade"),ToPru("класу")],"line2"));
 		self.appendChild(line(ToPru("Скандинавської гімназії")));
@@ -133,26 +133,10 @@ function main(){
 		return self;
 	}
 
-	function fireChange(event){
-		var self = event.target;
-		switch(true){
-			case ((event.keyCode < 45) && (event.keyCode != 32)):
-			case event.keyCode == 91:
-			case event.keyCode == 92:
-			case event.keyCode == 93:
-			case event.keyCode == 145:
-			case event.keyCode == 225:
-				return;
-			default:
-				if (self.timer) {
-					clearTimeout(self.timer);
-				}
-				self.timer = setTimeout(function(){
-					self.timer=undefined;
-					return self.onchange();
-				},600);
-		}
-	}
+	var fireChange = Debounced(function(target){
+		var self = target;
+		self.onchange();
+	},600);
 
 	function changeX(v){
 		var all = document.querySelectorAll(".shield");
@@ -165,8 +149,10 @@ function main(){
 	function line0(v){
 		var all = document.querySelectorAll(".shield:not(#pad) #line0.line");
 		for (var i=0;i<all.length;i++){
-      if (typeof v === "string") all[i].set(ToPru(v));
-			else all[i].toggle(!!v);
+			if (typeof v === "boolean") all[i].toggle(v)
+			else {
+				all[i].set(ToPru(v));
+			}
 		}
 		resize();
 	};
@@ -174,8 +160,10 @@ function main(){
 	function setClassname(v){
 		var all = document.querySelectorAll(".shield:not(#pad) #line1.line");
 		for (var i=0;i<all.length;i++){
-			if (typeof v === "string") all[i].set(ToPru(v));
-			else all[i].toggle(!!v);
+			if (typeof v === "boolean") all[i].toggle(v)
+			else {
+				all[i].set(ToPru(v));
+			}
 		}
 		resize();
 	}
@@ -183,8 +171,14 @@ function main(){
   function setclsname2(v){
     var all = document.querySelectorAll(".shield:not(#pad) #line1a.line");
 		for (var i=0;i<all.length;i++){
-			if (typeof v === "string") all[i].set(ToPru(v));
-			else all[i].toggle(!!v);
+			if (typeof v === "string") {
+				if (v == "") all[i].toggle(false);
+				else {
+					all[i].toggle(true);
+					all[i].set(ToPru(v));
+				}
+			}
+			else all[i].toggle(false);
 		}
 		resize();
   }
@@ -257,13 +251,13 @@ function main(){
 		var hsize = (out.clientWidth/Math.floor(out.clientWidth/out.children[0].clientWidth));
 		for (var i=0;i<out.children.length;i++){
 			out.children[i].style.height = vsize+"px";
-			out.children[i].style.flexBasis?out.children[i].style.flexBasis=hsize*0.85+"px":out.children[i].style.webkitFlexBasis=hsize*0.85+"px";
+			out.children[i].style.flexBasis?out.children[i].style.flexBasis=hsize*0.9+"px":out.children[i].style.webkitFlexBasis=hsize*0.9+"px";
 		}
 		complement();
 	}
 
   App = {
-    Debounced: Debounced,
+    fireChange: fireChange,
     changeX: changeX,
     line0: line0,
     setClassname: setClassname,

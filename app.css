@@ -94,7 +94,7 @@ form #dim {
 	height: auto;
 	line-height: 0.5em;
 	text-align: center;
-	padding: 5mm 0px 3mm;
+	padding: 0.3em 0 0.1em;
 	border: solid 0.5px black;
 }
 .shield#pad{
@@ -104,8 +104,8 @@ form #dim {
 	-webkit-flex: 0.5em 0 1;
 	-ms-flex: 0.5em 0 1;
 	flex: 0.5em 0 1;
-	margin: 0.4em 1em;
-	/* white-space: nowrap; */
+	margin: 0.4em 0.1em;
+	white-space: nowrap;
 }
 .shield p:empty, .shield p[hide="true"] {
 	display: none;

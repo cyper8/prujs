@@ -4,6 +4,8 @@ var App;
 function main(){
 	var out = document.getElementById("output");
 
+	var store = window.localStorage;
+
   function Debounced(func,backoff){
   	var timer;
   	return function(){
@@ -27,6 +29,12 @@ function main(){
 
 	function form(field){
 		var form = document.getElementById("shields_form");
+		if (arguments.length>1){
+			var val = arguments[1];
+			if (field == "kids") val=val.join(", ");
+			form[field].value = val;
+			form[field].dispatchEvent(new Event("change"));
+		}
 		if (field == "kids") {
 			return tolist(form.kids.value);
 		}
@@ -36,30 +44,58 @@ function main(){
 	var config = {
 		getSettings(){
 			return {
-				scale: form("x"),
-				firstline: {
-					enabled: form("fline"),
-					text: form("firstline_text")
-				},
-				classname: {
-					enabled: form("sline"),
-					text: form("classname")
-				},
-				classname2: form("classname2"),
-				grade: form("grade"),
-				children: form("kids")
+				name: store.getItem("name") || "default",
+				scale: store.getItem("scale") || form("scale"),
+				firstline: store.getItem("firstline") || form("firstline"),
+				classname: store.getItem("classname") || form("classname"),
+				classname2: store.getItem("classname2") || form("classname2"),
+				grade: store.getItem("grade") || form("grade"),
+				kids: tolist(store.getItem("kids")) || form("kids")
 			}
 		},
 		dump(){
 			var link = document.getElementById("config_link") || document.createElement("a");
 			var cfg = this.getSettings();
 			link.id = "config_link";
-			link.download = "Генератор бірок.json";
+			link.download = cfg.name+".json";
 			if (link.href.length) URL.revokeObjectURL(link.href);
-			link.href = URL.createObjectURL(new File([JSON.stringify(cfg)],"Генератор бірок",{type: "text/json"}));
+			link.href = URL.createObjectURL(new File([JSON.stringify(cfg)],cfg.name,{type: "text/json"}));
 			document.body.appendChild(link);
 			link.style.visibility = "hidden";
 			link.click();
+		},
+		loadConfig(input){
+			var reader = new FileReader()
+			, config_file = input.files[0];
+			if (config_file.type != "application/json") throw new Error("wrong config file type: should be a *.json file");
+			reader.addEventListener("load",function(e){
+				try {
+					var cfg = JSON.parse(e.target.result);
+					if (cfg){
+						config.applyConfig(cfg);
+					}
+					else throw new TypeError("failed to parse config file");
+				}
+				catch(err){
+					console.error(err)
+				}
+			});
+			reader.readAsText(config_file)
+		},
+		applyConfig(cfg){
+			store.setItem("name",document.getElementById("config_name").innerText = cfg.name);
+			form("kids",cfg.kids);
+			form("scale",cfg.scale);
+			form("firstline",cfg.firstline);
+			form("classname",cfg.classname);
+			form("classname2",cfg.classname2);
+			form("grade",cfg.grade);
+			// store.setItem("kids",form("kids",cfg.kids));
+			// store.setItem("scale",form("scale",cfg.scale));
+			// store.setItem("firstline",form("firstline",cfg.firstline));
+			// store.setItem("classname",form("classname",cfg.classname));
+			// store.setItem("classname2",form("classname2",cfg.classname2));
+			// store.setItem("grade",form("grade",cfg.grade));
 		}
 	}
 
@@ -105,7 +141,7 @@ function main(){
 			var self = document.createElement("div");
 			self.className="shield";
 			if (id) self.id = id;
-			self.style.fontSize = form("x")+"em";
+			self.style.fontSize = form("scale")+"em";
 			return self;
 		}
 
@@ -146,9 +182,9 @@ function main(){
 
 
 		var self = cell();
-		self.appendChild(line(ToPru(form("firstline_text")),"line0")).toggle(form("fline"));
-		self.appendChild(line(ToPru(form("classname")),"line1")).toggle(form("sline"));
-    self.appendChild(line(ToPru(form("classname2")),"line1a"));
+		self.appendChild(line(ToPru(form("firstline")),"firstline"));
+		self.appendChild(line(ToPru(form("classname")),"classname"));
+	    self.appendChild(line(ToPru(form("classname2")),"classname2"));
 		var gender = rotatable([ToPru("учня"),ToPru("учениці")],"gender");
 		self.appendChild(line([gender,variable(ToPru(form("grade")),"grade"),ToPru("класу")],"line2"));
 		self.appendChild(line(ToPru("Скандинавської гімназії")));
@@ -169,6 +205,7 @@ function main(){
 	},600);
 
 	function changeX(v){
+		store.setItem("scale",v);
 		var all = document.querySelectorAll(".shield");
 		for (var i=0;i<all.length;i++){
 			all[i].style.fontSize = v+"em";
@@ -176,30 +213,9 @@ function main(){
 		resize();
 	}
 
-	function line0(v){
-		var all = document.querySelectorAll(".shield:not(#pad) #line0.line");
-		for (var i=0;i<all.length;i++){
-			if (typeof v === "boolean") all[i].toggle(v)
-			else {
-				all[i].set(ToPru(v));
-			}
-		}
-		resize();
-	};
-
-	function setClassname(v){
-		var all = document.querySelectorAll(".shield:not(#pad) #line1.line");
-		for (var i=0;i<all.length;i++){
-			if (typeof v === "boolean") all[i].toggle(v)
-			else {
-				all[i].set(ToPru(v));
-			}
-		}
-		resize();
-	}
-
-  function setclsname2(v){
-    var all = document.querySelectorAll(".shield:not(#pad) #line1a.line");
+	function optionalline(id,v){
+		store.setItem(id,v);
+		var all = document.querySelectorAll(".shield:not(#pad) #"+id+".line");
 		for (var i=0;i<all.length;i++){
 			if (typeof v === "string") {
 				if (v == "") all[i].toggle(false);
@@ -211,9 +227,47 @@ function main(){
 			else all[i].toggle(false);
 		}
 		resize();
-  }
+	}
+
+	// function line0(v){
+	// 	var all = document.querySelectorAll(".shield:not(#pad) #line0.line");
+	// 	for (var i=0;i<all.length;i++){
+	// 		if (typeof v === "boolean") all[i].toggle(v)
+	// 		else {
+	// 			all[i].set(ToPru(v));
+	// 		}
+	// 	}
+	// 	resize();
+	// };
+	//
+	// function setClassname(v){
+	// 	var all = document.querySelectorAll(".shield:not(#pad) #line1.line");
+	// 	for (var i=0;i<all.length;i++){
+	// 		if (typeof v === "boolean") all[i].toggle(v)
+	// 		else {
+	// 			all[i].set(ToPru(v));
+	// 		}
+	// 	}
+	// 	resize();
+	// }
+	//
+  // function setclsname2(v){
+  //   var all = document.querySelectorAll(".shield:not(#pad) #line1a.line");
+	// 	for (var i=0;i<all.length;i++){
+	// 		if (typeof v === "string") {
+	// 			if (v == "") all[i].toggle(false);
+	// 			else {
+	// 				all[i].toggle(true);
+	// 				all[i].set(ToPru(v));
+	// 			}
+	// 		}
+	// 		else all[i].toggle(false);
+	// 	}
+	// 	resize();
+  // }
 
 	function setGrade(v){
+		store.setItem("grade",v);
 		var all = document.querySelectorAll(".shield:not(#pad) #line2.line #grade");
 		for (var i=0;i<all.length;i++){
 			all[i].set(ToPru(v));
@@ -221,6 +275,7 @@ function main(){
 	}
 
 	function setKids(lines){
+		store.setItem("kids",lines);
 		render(tolist(lines));
 	}
 
@@ -289,15 +344,15 @@ function main(){
   App = {
     fireChange: fireChange,
     changeX: changeX,
-    line0: line0,
-    setClassname: setClassname,
-    setclsname2: setclsname2,
+    optionalline: optionalline,
     setGrade: setGrade,
     setKids: setKids,
 		config: config
   }
 
-	render(form("kids"));
+	App.config.applyConfig(App.config.getSettings());
+
+	//render(form("kids"));
 }
 
 window.addEventListener("load",main);

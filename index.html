@@ -12,28 +12,57 @@
 	<input type="checkbox" id="formswitch">
 	<form id="shields_form">
 		<label for="formswitch" class="button">Налаштувати ... </label>
-		<label id="dim">Розмір:<input type="range" min="0.5" max="2" step="0.1" name="scale" value=1 onchange="App.changeX(this.value)">
-		</label>
+		<div class="outline">
+			<label class="info" message="Налаштування збережені у браузері">
+				Назва поточних налаштувань:
+				<input type="text" id="config_name" value="App.fireChange(this)" onchange="App.setName(this.value)">
+				<label class="button info" message="Завантаження файлу налаштувань на комп'ютер" onclick="App.config.dump()">Зберегти у файл...</label><label class="button" for="config_file">Відкрити файл налаштувань...</label>
+				<input type="file" style="display: none" name="config_file" accept="application/json" id="config_file" onchange="App.config.loadConfig(this)">
+			</label>
 
-		<label for="firstline">
-      <input type="text" name="firstline" id="firstline" value="Зошит" oninput="App.fireChange(this)" onchange="App.optionalline(this.id,this.value)">
-    </label>
+			<label class="info" message="Шрифт" id="dim">
+				<datalist id="tickmarks">
+				  <option value="0.8" label="8 pt">
+				  <option value="0.9" label="9 pt">
+				  <option value="1" label="10 pt">
+				  <option value="1.1" label="11 pt">
+				  <option value="1.2" label="12 pt">
+				  <option value="1.3" label="13 pt">
+				  <option value="1.4" label="14 pt">
+				  <option value="1.5" label="15 pt">
+				  <option value="1.6" label="16 pt">
+				  <option value="1.7" label="17 pt">
+				  <option value="1.8" label="18 pt">
+					<option value="1.9" label="19 pt">
+				  <option value="2" label="20 pt">
+				  <option value="2.1" label="21 pt">
+				  <option value="2.2" label="22 pt">
+				  <option value="2.3" label="23 pt">
+					<option value="2.4" label="24 pt">
+				</datalist>
+				<input type="range" min="0.8" list="tickmarks" max="2.4" step="0.1" name="scale" value=1.3 onchange="App.changeX(this.value)">
+			</label>
 
-		<label for="classname">
-			<input type="text" name="classname" id="classname" value="для робіт з математики" oninput="App.fireChange(this)" onchange="App.optionalline(this.id,this.value)">
-		</label>
+			<label for="firstline">
+	      <input type="text" name="firstline" id="firstline" value="Зошит" oninput="App.fireChange(this)" onchange="App.optionalline(this.id,this.value)">
+	    </label>
 
-    <label for="classname2">
-      <input type="text" name="classname2" id="classname2" oninput="App.fireChange(this)" onchange="App.optionalline(this.id,this.value)">
-    </label>
+			<label for="classname">
+				<input type="text" name="classname" id="classname" value="для робіт з математики" oninput="App.fireChange(this)" onchange="App.optionalline(this.id,this.value)">
+			</label>
 
-		<label>учня|учениці <input type="text" name="grade" placeholder="1 - Д" oninput="App.fireChange(this)" onchange="App.setGrade((this.value && this.value!='')?this.value:this.placeholder)"> класу</label>
-		<label>Скандинавської гімназії</label>
-		<label>м. Києва</label>
-		<label>Прізвища та імена дітей (в родовому відмінку, в стовпчик або через кому): <textarea name="kids" oninput="App.fireChange(this)" onchange="App.setKids(this.value)"></textarea></label>
-		<label onclick="App.config.dump()">Поточні налаштування: <span id="config_name">default</span></label>
-		<label for="config_file">Відкрити файл налаштувань...</label>
-		<input type="file" style="display: none" name="config_file" accept="application/json" id="config_file" onchange="App.config.loadConfig(this)">
+	    <label for="classname2">
+	      <input type="text" name="classname2" id="classname2" oninput="App.fireChange(this)" onchange="App.optionalline(this.id,this.value)">
+	    </label>
+
+			<label>учня|учениці <input type="text" name="grade" style="width: 10em" placeholder="1 - Д" oninput="App.fireChange(this)" onchange="App.setGrade((this.value && this.value!='')?this.value:this.placeholder)"> класу</label>
+			<label>Скандинавської гімназії</label>
+			<label>м. Києва</label>
+		</div>
+		<div class="kids outline">
+			<label class="info" message="(в родовому відмінку, в стовпчик або через кому)">Прізвища та імена дітей: </label>
+			<textarea name="kids" oninput="App.fireChange(this)" onchange="App.setKids(this.value)"></textarea>
+		</div>
 	</form>
 	<div class="pages" id="output">	</div>
 	<div class="button hoist info" message="Для правильного друку в налаштуваннях друку слід встановити орієнтацію сторінки - альбомну(landscape), і нульові поля" id="print" onclick="window.print()">Друк</div>

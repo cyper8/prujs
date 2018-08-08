@@ -46,9 +46,9 @@ function main(){
 			return {
 				name: store.getItem("name") || "default",
 				scale: store.getItem("scale") || form("scale"),
-				firstline: store.getItem("firstline") || form("firstline"),
-				classname: store.getItem("classname") || form("classname"),
-				classname2: store.getItem("classname2") || form("classname2"),
+				firstline: (store.getItem("firstline")=="empty")?"":(store.getItem("firstline") || form("firstline")),
+				classname: (store.getItem("classname")=="empty")?"":(store.getItem("classname") || form("classname")),
+				classname2: (store.getItem("classname2")=="empty")?"":(store.getItem("classname2") || form("classname2")),
 				grade: store.getItem("grade") || form("grade"),
 				kids: tolist(store.getItem("kids")) || form("kids")
 			}
@@ -83,7 +83,8 @@ function main(){
 			reader.readAsText(config_file)
 		},
 		applyConfig(cfg){
-			store.setItem("name",document.getElementById("config_name").innerText = cfg.name);
+			//store.setItem("name",document.getElementById("config_name").innerText = cfg.name);
+			form("config_name",cfg.name);
 			form("kids",cfg.kids);
 			form("scale",cfg.scale);
 			form("firstline",cfg.firstline);
@@ -145,7 +146,7 @@ function main(){
 			return self;
 		}
 
-		function line(defaultValue,id){
+		var line = Cell.line = function line(defaultValue,id){
 			var self = document.createElement("p");
 			self.className="line";
 			if (id) self.id=id;
@@ -155,7 +156,7 @@ function main(){
 			return self;
 		}
 
-		function variable(defaultValue,id){
+		var variable = Cell.variable = function variable(defaultValue,id){
 			var self = document.createElement("span");
 			self.id = id;
 			self.set = set.bind(self);
@@ -163,7 +164,7 @@ function main(){
 			return self;
 		}
 
-		function rotatable(valuesArray,id){
+		var rotatable = Cell.rotatable = function rotatable(valuesArray,id){
 			var _values = valuesArray.slice(0);
 			var self = document.createElement("span");
 			self.className = "rotatable";
@@ -180,11 +181,10 @@ function main(){
 			return self;
 		}
 
-
 		var self = cell();
 		self.appendChild(line(ToPru(form("firstline")),"firstline"));
 		self.appendChild(line(ToPru(form("classname")),"classname"));
-	    self.appendChild(line(ToPru(form("classname2")),"classname2"));
+	  self.appendChild(line(ToPru(form("classname2")),"classname2"));
 		var gender = rotatable([ToPru("учня"),ToPru("учениці")],"gender");
 		self.appendChild(line([gender,variable(ToPru(form("grade")),"grade"),ToPru("класу")],"line2"));
 		self.appendChild(line(ToPru("Скандинавської гімназії")));
@@ -197,86 +197,6 @@ function main(){
 		}
 		else gender.rotate((male)?0:1);
 		return self;
-	}
-
-	var fireChange = Debounced(function(target){
-		var self = target;
-		self.onchange();
-	},600);
-
-	function changeX(v){
-		store.setItem("scale",v);
-		var all = document.querySelectorAll(".shield");
-		for (var i=0;i<all.length;i++){
-			all[i].style.fontSize = v+"em";
-		}
-		resize();
-	}
-
-	function optionalline(id,v){
-		store.setItem(id,v);
-		var all = document.querySelectorAll(".shield:not(#pad) #"+id+".line");
-		for (var i=0;i<all.length;i++){
-			if (typeof v === "string") {
-				if (v == "") all[i].toggle(false);
-				else {
-					all[i].toggle(true);
-					all[i].set(ToPru(v));
-				}
-			}
-			else all[i].toggle(false);
-		}
-		resize();
-	}
-
-	// function line0(v){
-	// 	var all = document.querySelectorAll(".shield:not(#pad) #line0.line");
-	// 	for (var i=0;i<all.length;i++){
-	// 		if (typeof v === "boolean") all[i].toggle(v)
-	// 		else {
-	// 			all[i].set(ToPru(v));
-	// 		}
-	// 	}
-	// 	resize();
-	// };
-	//
-	// function setClassname(v){
-	// 	var all = document.querySelectorAll(".shield:not(#pad) #line1.line");
-	// 	for (var i=0;i<all.length;i++){
-	// 		if (typeof v === "boolean") all[i].toggle(v)
-	// 		else {
-	// 			all[i].set(ToPru(v));
-	// 		}
-	// 	}
-	// 	resize();
-	// }
-	//
-  // function setclsname2(v){
-  //   var all = document.querySelectorAll(".shield:not(#pad) #line1a.line");
-	// 	for (var i=0;i<all.length;i++){
-	// 		if (typeof v === "string") {
-	// 			if (v == "") all[i].toggle(false);
-	// 			else {
-	// 				all[i].toggle(true);
-	// 				all[i].set(ToPru(v));
-	// 			}
-	// 		}
-	// 		else all[i].toggle(false);
-	// 	}
-	// 	resize();
-  // }
-
-	function setGrade(v){
-		store.setItem("grade",v);
-		var all = document.querySelectorAll(".shield:not(#pad) #line2.line #grade");
-		for (var i=0;i<all.length;i++){
-			all[i].set(ToPru(v));
-		}
-	}
-
-	function setKids(lines){
-		store.setItem("kids",lines);
-		render(tolist(lines));
 	}
 
 	function checkMale(name){
@@ -342,17 +262,53 @@ function main(){
 	}
 
   App = {
-    fireChange: fireChange,
-    changeX: changeX,
-    optionalline: optionalline,
-    setGrade: setGrade,
-    setKids: setKids,
+    fireChange: Debounced(function(target){
+			var self = target;
+			self.onchange();
+			self.dispatchEvent(new Event("change"));
+		},600),
+		changeX(v){
+			store.setItem("scale",v);
+			var all = document.querySelectorAll(".shield");
+			for (var i=0;i<all.length;i++){
+				all[i].style.fontSize = v+"em";
+			}
+			resize();
+		},
+		optionalline(id,v){
+			store.setItem(id,v==""?"empty":v);
+			var all = document.querySelectorAll(".shield:not(#pad) #"+id+".line");
+			for (var i=0;i<all.length;i++){
+				if (typeof v === "string") {
+					if (v == "") all[i].toggle(false);
+					else {
+						all[i].toggle(true);
+						all[i].set(ToPru(v));
+					}
+				}
+				else all[i].toggle(false);
+			}
+			resize();
+		},
+		setGrade(v){
+			store.setItem("grade",v);
+			var all = document.querySelectorAll(".shield:not(#pad) #line2.line #grade");
+			for (var i=0;i<all.length;i++){
+				all[i].set(ToPru(v));
+			}
+		},
+		setKids(lines){
+			store.setItem("kids",lines);
+			render(tolist(lines));
+		},
+		setName(v){
+			store.setItem("name",v);
+		},
 		config: config
   }
 
 	App.config.applyConfig(App.config.getSettings());
 
-	//render(form("kids"));
 }
 
 window.addEventListener("load",main);

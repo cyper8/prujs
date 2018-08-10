@@ -121,9 +121,12 @@ form #dim {
 	height: auto;
 	line-height: 0.5em;
 	text-align: center;
-	padding: 0.3em 0 0.1em;
+	padding: 0.3em 0px 0.1em;
 	border: solid 0.5px black;
+	background-clip: content-box;
+	background-color: white;
 }
+
 .shield#pad{
 	visibility: hidden
 }
@@ -133,6 +136,8 @@ form #dim {
 	flex: 0.5em 0 1;
 	margin: 0.4em 0.1em;
 	white-space: nowrap;
+	/* background-clip: padding-box; */
+	/* background-color: white; */
 }
 .shield p:empty, .shield p[hide="true"] {
 	display: none;
@@ -174,9 +179,16 @@ form #dim {
 	width: 297mm;
 	height: 210mm;
 	overflow:visible;
-	display: flex; display: -webkit-flex;
-	-webkit-flex-direction: row; -ms-flex-direction: row; flex-direction: row;
+	display: flex;
+	display: -webkit-flex;
+	-webkit-flex-direction: row;
+	-ms-flex-direction: row;
+	flex-direction: row;
 	flex-wrap: wrap;
+	background-color: white;
+}
+.pages.bordered{
+	background-color: #ddd;
 }
 .button {
 	display: inline-block;

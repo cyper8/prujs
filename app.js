@@ -76,7 +76,7 @@ function main(){
 	      },
 				'fake': {
 					value: true,
-					
+
 				}
 	    });
 	  }
@@ -122,6 +122,7 @@ function main(){
 			return {
 				name: store.getItem("name") || "default",
 				scale: store.getItem("scale") || form("scale"),
+				pad: store.getItem("pad") || form("pad"),
 				firstline: (store.getItem("firstline")=="empty")?"":(store.getItem("firstline") || form("firstline")),
 				classname: (store.getItem("classname")=="empty")?"":(store.getItem("classname") || form("classname")),
 				classname2: (store.getItem("classname2")=="empty")?"":(store.getItem("classname2") || form("classname2")),
@@ -351,6 +352,15 @@ function main(){
 			}
 			resize();
 		},
+		changePad(v){
+			store.setItem("pad",v);
+			var all = document.querySelectorAll(".shield");
+			for (var i=0;i<all.length;i++){
+				all[i].style.paddingLeft = v+"px";
+				all[i].style.paddingRight = v+"px";
+			}
+			resize();
+		},
 		optionalline(id,v){
 			store.setItem(id,v==""?"empty":v);
 			var all = document.querySelectorAll(".shield:not(#pad) #"+id+".line");
@@ -379,6 +389,12 @@ function main(){
 		},
 		setName(v){
 			store.setItem("name",v);
+		},
+		hilight(){
+			out.classList.add("bordered");
+		},
+		dehilight(){
+			out.classList.remove("bordered");
 		},
 		config: config
   }

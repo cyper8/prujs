@@ -43,6 +43,29 @@
 				<input type="range" min="0.8" list="tickmarks" max="2.4" step="0.1" name="scale" value=1.3 onchange="App.changeX(this.value)">
 			</label>
 
+			<label class="info" message="Відступи" id="dim-pad">
+				<!-- <datalist id="tickmarks2">
+					<option value="0" >
+				  <option value="5" >
+				  <option value="10" >
+				  <option value="15" >
+				  <option value="20" >
+				  <option value="25" >
+				  <option value="30" >
+				  <option value="35" >
+				  <option value="40" >
+				  <option value="9" >
+				  <option value="10">
+					<option value="11">
+				  <option value="12">
+				  <option value="13">
+				  <option value="14">
+				  <option value="15">
+					<option value="16">
+				</datalist> -->
+				<input type="range" min="0" list="tickmarks2" max="30" step="3" name="pad" value=0 oninput="App.changePad(this.value)" onmousedown="App.hilight()" onmouseup="App.dehilight()">
+			</label>
+
 			<label for="firstline">
 	      <input type="text" name="firstline" id="firstline" value="Зошит" oninput="App.fireChange(this)" onchange="App.optionalline(this.id,this.value)">
 	    </label>

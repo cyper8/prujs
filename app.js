@@ -160,20 +160,14 @@ function main(){
 			reader.readAsText(config_file)
 		},
 		applyConfig(cfg){
-			//store.setItem("name",document.getElementById("config_name").innerText = cfg.name);
 			form("config_name",cfg.name);
 			form("kids",cfg.kids);
 			form("scale",cfg.scale);
+			form("pad", cfg.pad);
 			form("firstline",cfg.firstline);
 			form("classname",cfg.classname);
 			form("classname2",cfg.classname2);
 			form("grade",cfg.grade);
-			// store.setItem("kids",form("kids",cfg.kids));
-			// store.setItem("scale",form("scale",cfg.scale));
-			// store.setItem("firstline",form("firstline",cfg.firstline));
-			// store.setItem("classname",form("classname",cfg.classname));
-			// store.setItem("classname2",form("classname2",cfg.classname2));
-			// store.setItem("grade",form("grade",cfg.grade));
 		}
 	}
 

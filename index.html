@@ -63,7 +63,7 @@
 				  <option value="15">
 					<option value="16">
 				</datalist> -->
-				<input type="range" min="0" list="tickmarks2" max="30" step="3" name="pad" value=0 oninput="App.changePad(this.value)" onmousedown="App.hilight()" onmouseup="App.dehilight()">
+				<input type="range" min="0" list="tickmarks2" max="30" step="3" name="pad" value=0 oninput="App.fireChange(this)" onchange="App.changePad(this.value)" onmousedown="App.hilight()" onmouseup="App.dehilight()">
 			</label>
 
 			<label for="firstline">

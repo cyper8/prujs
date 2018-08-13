@@ -44,25 +44,19 @@
 			</label>
 
 			<label class="info" message="Відступи" id="dim-pad">
-				<!-- <datalist id="tickmarks2">
-					<option value="0" >
-				  <option value="5" >
-				  <option value="10" >
-				  <option value="15" >
-				  <option value="20" >
-				  <option value="25" >
-				  <option value="30" >
-				  <option value="35" >
-				  <option value="40" >
+				<datalist id="tickmarks2">
+					<option value="0" label="0px">
+				  <option value="3">
+				  <option value="6" >
 				  <option value="9" >
-				  <option value="10">
-					<option value="11">
-				  <option value="12">
-				  <option value="13">
-				  <option value="14">
-				  <option value="15">
-					<option value="16">
-				</datalist> -->
+				  <option value="12" >
+				  <option value="15" label="15px">
+				  <option value="18" >
+				  <option value="21" >
+				  <option value="24" >
+				  <option value="27" >
+				  <option value="30" label="30px">
+				</datalist>
 				<input type="range" min="0" list="tickmarks2" max="30" step="3" name="pad" value=0 oninput="App.fireChange(this)" onchange="App.changePad(this.value)" onmousedown="App.hilight()" onmouseup="App.dehilight()">
 			</label>
 
